@@ -1,6 +1,3 @@
-Gemini said
-This README.md is designed to help your designer (or anyone else) set up the entire environment from scratch without any confusion. It covers the Local AI, Python, and API requirements.
-
 ⚖️ Legal AI Assistant: Token-Reduced Summarization
 This project is a high-performance legal document processing pipeline. It uses the Scaledown API to compress heavy legal text into a "sweet spot" (approx. 50% reduction) and then uses Local Ollama (Llama 3) to generate a clean, final summary and chat-ready analysis.
 
