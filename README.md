@@ -27,7 +27,7 @@ Ensure you have Python 3.9+ installed.
 
 Navigate to the project root folder:
 
-Bash cd path\:to_your\file
+Bash cd path:\to_your\file
 Install all required Python libraries:
 
 Bash
