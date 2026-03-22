@@ -27,8 +27,7 @@ Ensure you have Python 3.9+ installed.
 
 Navigate to the project root folder:
 
-Bash
-cd D:\law
+Bash cd path\:to_your\file
 Install all required Python libraries:
 
 Bash
@@ -54,7 +53,7 @@ Status: Wait for Uvicorn running on http://127.0.0.1:8000.
 
 Step 2: Start the Frontend (Streamlit)
 Bash
-streamlit run your_frontend_filename.py
+streamlit run frontend.py
 URL: The app will automatically open in your browser (usually http://localhost:8501).
 
 📁 Supported Formats
