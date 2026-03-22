@@ -39,7 +39,6 @@ for k, v in defaults.items():
     if k not in st.session_state:
         st.session_state[k] = v
 
-# ---------- LOGIN ----------
 if not st.session_state.logged_in:
     _, col, _ = st.columns([1, 1.5, 1])
     with col:
@@ -78,7 +77,6 @@ if not st.session_state.logged_in:
                         st.success("Created! Please login.")
     st.stop()
 
-# ---------- SIDEBAR ----------
 with st.sidebar:
     st.title("⚖️ Dashboard")
     st.write(f"Logged in: **{st.session_state.user_email}**")
@@ -138,7 +136,6 @@ with st.sidebar:
             use_container_width=True
         )
 
-# ---------- MAIN ----------
 st.title("💬 Legal AI Assistant")
 
 for msg in st.session_state.messages:
@@ -160,13 +157,11 @@ if prompt := st.chat_input("Ask or attach a document...", accept_file=True):
     with st.chat_message("user"):
         st.markdown(display)
 
-    # ---------- DOCUMENT FLOW ----------
     if uploaded_files or len(user_text) > 300:
         with st.status("Analyzing Legal Content...", expanded=True) as status_box:
             p_text = {"text": user_text} if not uploaded_files else {}
             p_file = {"file": (uploaded_files[0].name, uploaded_files[0].getvalue())} if uploaded_files else None
 
-            # We create a flag to tell the app when it's safe to refresh
             finished_successfully = False 
 
             try:
@@ -174,9 +169,8 @@ if prompt := st.chat_input("Ask or attach a document...", accept_file=True):
 
                 for line in r.iter_lines():
                     if line:
-                        update = json.loads(line.decode('utf-8')) # Added safe decoding
+                        update = json.loads(line.decode('utf-8'))
 
-                        # --- TOKEN FIX ---
                         if "reduction" in update and update["reduction"] is not None:
                             val = update["reduction"]
                             orig = update.get("original_tokens", 0)
@@ -197,7 +191,6 @@ if prompt := st.chat_input("Ask or attach a document...", accept_file=True):
                                     f"Saved: {saved if saved > 0 else 0}"
                                 )
 
-                        # --- STATUS UPDATES ---
                         if update["step"] == "reading":
                             status_box.update(label="Reading document...", state="running")
 
@@ -212,7 +205,6 @@ if prompt := st.chat_input("Ask or attach a document...", accept_file=True):
                             st.session_state.last_summary = update["summary"]
                             st.session_state.messages.append({"role": "assistant", "content": update["summary"]})
                             status_box.update(label="Done!", state="complete")
-                            # Set the flag to true instead of refreshing immediately
                             finished_successfully = True
 
                         elif update["step"] == "error":
@@ -223,11 +215,8 @@ if prompt := st.chat_input("Ask or attach a document...", accept_file=True):
                 st.error(f"Connection Error: {e}")
                 status_box.update(label="Failed to connect to backend", state="error")
 
-        # --- REFRESH OUTSIDE THE LOOP ---
-        # Now the page will safely reload and display the new chat message!
         if finished_successfully:
             st.rerun()
-    # ---------- CHAT FLOW ----------
     else:
         api_msgs = [{"role": "system", "content": f"Expert Indian Legal Assistant. Context: {st.session_state.document_context}"}]
         api_msgs.extend([{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-5:]])
